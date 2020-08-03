@@ -3,6 +3,8 @@ import scrapy
 # https://forum.gamer.com.tw/B.php?bsn=31066
 from scrapy import Selector
 from selenium import webdriver
+from idv.zjh.test.myFirstScrapyProject.myFirstScrapyProject.items import MyfirstscrapyprojectItem
+# import idv.zjh.test.myFirstScrapyProject.it
 from scrapy.http import Request, FormRequest
 
 
@@ -44,8 +46,10 @@ class gammerSpider(scrapy.Spider):
         # filename = 'quotes-%s.html' % page
         # with open(filename, 'wb') as f:
         #     f.write(response.body)
-        # 取得標題
 
+        items = MyfirstscrapyprojectItem
+
+        # 取得標題
         title = response.selector.xpath('//h1[@class="title"]/text()').get()
         # 取得內文
         # content = response.selector.xpath('//div[@class="c-article__content"]/*/text()').getall()
@@ -60,7 +64,9 @@ class gammerSpider(scrapy.Spider):
         # 取得日期時間
         time = response.selector.xpath('//div[@class="c-post__header__info"]/*/text()').getall()
         print(title)
-        print()
+
+        # items['title'] = title
+        print(title)
         for index in range(len(authorId)):
             # print(str(index) + "-----------------------")
             print(floor[index])
@@ -69,6 +75,13 @@ class gammerSpider(scrapy.Spider):
             print(time[index])
             print('message：' + content[index].xpath('string(.)').extract()[0])
 
+            items['time'] = time[index]
+            items['floor'] = floor[index]
+            items['authorName'] = authorName[index]
+            items['authorId'] = authorId[index]
+            items['floor'] = floor[index]
+            items['content'] = content[index].xpath('string(.)').extract()[0]
+            yield (items)
         # 下一頁
         #
         # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()

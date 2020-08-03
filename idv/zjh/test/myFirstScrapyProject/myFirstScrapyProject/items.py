@@ -5,8 +5,11 @@
 
 import scrapy
 
-
 class MyfirstscrapyprojectItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    floor = scrapy.Field()
+    authorName = scrapy.Field()
+    authorId = scrapy.Field()
+    time = scrapy.Field()
+    content = scrapy.Field()
