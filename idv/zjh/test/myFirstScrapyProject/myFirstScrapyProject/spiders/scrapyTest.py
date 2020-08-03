@@ -1,16 +1,14 @@
 import scrapy
 
-# https://forum.gamer.com.tw/B.php?bsn=31066
 from scrapy import Selector
 from selenium import webdriver
 from idv.zjh.test.myFirstScrapyProject.myFirstScrapyProject.items import MyfirstscrapyprojectItem
-# import idv.zjh.test.myFirstScrapyProject.it
 from scrapy.http import Request, FormRequest
-
 
 class gammerSpider(scrapy.Spider):
     name = "bh3"
     allowes_domains = ["forum.gamer.com.tw"]
+    # 崩壞三 討論列表
     start_urls = ('https://forum.gamer.com.tw/B.php?bsn=31066',)
 
     def __init__(self):
@@ -20,24 +18,26 @@ class gammerSpider(scrapy.Spider):
     def parse(self, response):
         # urls = response.css('a[class=b-list__main__title]').extract()
 
-        # 爬自己網頁 下一頁
-        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
-        url = response.urljoin(next_page_url)
-        if url:
-            yield scrapy.Request(url, callback=self.parseContent)
-
-        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
-        # for next in next_page_url:
-        #     url = response.urljoin(next)
-        #     # print(url)
-        #     if url:
-        #         yield scrapy.Request(url, callback=self.parseContent)
-
-        # 爬自己網頁 下一頁
-        # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
+        # 單頁面測試
+        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
         # url = response.urljoin(next_page_url)
         # if url:
-        #     yield scrapy.Request(url, callback=self.parse)
+        #     yield scrapy.Request(url, callback=self.parseContent)
+
+        # 全部爬蟲
+        # 進入文章內容
+        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
+        for next in next_page_url:
+            url = response.urljoin(next)
+            # print(url)
+            if url:
+                yield scrapy.Request(url, callback=self.parseContent)
+
+        # 文章列表 下一頁
+        next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
+        url = response.urljoin(next_page_url)
+        if url:
+            yield scrapy.Request(url, callback=self.parse)
 
     # 抓取頁面內容
     def parseContent(self, response):
@@ -47,7 +47,7 @@ class gammerSpider(scrapy.Spider):
         # with open(filename, 'wb') as f:
         #     f.write(response.body)
 
-        items = MyfirstscrapyprojectItem
+        # items = MyfirstscrapyprojectItem
 
         # 取得標題
         title = response.selector.xpath('//h1[@class="title"]/text()').get()
@@ -66,6 +66,7 @@ class gammerSpider(scrapy.Spider):
         print(title)
 
         # items['title'] = title
+        items = []
         print(title)
         for index in range(len(authorId)):
             # print(str(index) + "-----------------------")
@@ -74,17 +75,23 @@ class gammerSpider(scrapy.Spider):
             print(authorId[index])
             print(time[index])
             print('message：' + content[index].xpath('string(.)').extract()[0])
+            item = MyfirstscrapyprojectItem()
+            item['title'] = title
+            item['time'] = time[index]
+            item['floor'] = floor[index]
+            item['authorName'] = authorName[index]
+            item['authorId'] = authorId[index]
+            item['floor'] = floor[index]
+            item['content'] = content[index].xpath('string(.)').extract()[0]
+            yield item
+            # items.append(item)
 
-            items['time'] = time[index]
-            items['floor'] = floor[index]
-            items['authorName'] = authorName[index]
-            items['authorId'] = authorId[index]
-            items['floor'] = floor[index]
-            items['content'] = content[index].xpath('string(.)').extract()[0]
-            yield (items)
+        # return items
         # 下一頁
         #
-        # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
-        # url = response.urljoin(next_page_url)
-        # if url:
-        #     yield scrapy.Request(url, callback=self.parseContent)
+        next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
+        url = response.urljoin(next_page_url)
+        if url:
+            yield scrapy.Request(url, callback=self.parseContent)
+
+
