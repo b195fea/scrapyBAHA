@@ -7,9 +7,15 @@ import scrapy
 
 class MyfirstscrapyprojectItem(scrapy.Item):
     # define the fields for your item here like:
-    title = scrapy.Field()
-    floor = scrapy.Field()
-    authorName = scrapy.Field()
-    authorId = scrapy.Field()
-    time = scrapy.Field()
-    content = scrapy.Field()
+    C00_title = scrapy.Field()
+    C03_floor = scrapy.Field()
+    C02_authorName = scrapy.Field()
+    C01_authorId = scrapy.Field()
+    C04_time = scrapy.Field()
+    C05_content = scrapy.Field()
+    C10_NORMAL = scrapy.Field()
+    C08_FIRST_LETTER = scrapy.Field()
+    C09_INITIALS = scrapy.Field()
+    C07_BOPOMOFO = scrapy.Field()
+    C06_BOPOMOFO_FIRST = scrapy.Field()
+
