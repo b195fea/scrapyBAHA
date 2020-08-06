@@ -19,33 +19,33 @@ class gammerSpider(scrapy.Spider):
     def parse(self, response):
         # urls = response.css('a[class=b-list__main__title]').extract()
         # 單頁面測試
-        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
-        # url = response.urljoin(next_page_url)
-        # if url:
-        #     yield scrapy.Request(url, callback=self.parseContent)
-        #     # yield scrapy.Request(url, callback=self.parseContent)
+        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
+        url = response.urljoin(next_page_url)
+        if url:
+            yield scrapy.Request(url, callback=self.parseContent)
+            # yield scrapy.Request(url, callback=self.parseContent)
 
         # 全部爬蟲
         # 進入文章內容
-        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
-
-        next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
+        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
+        #
+        # next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
 
         # 文章列表 下一頁
-        next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
-        url = response.urljoin(next_page_url)
-        if url:
-            yield scrapy.Request(url, callback=self.parse)
+        # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
+        # url = response.urljoin(next_page_url)
+        # if url:
+        #     yield scrapy.Request(url, callback=self.parse)
 
     def parseContent(self, response):
         # 寫入檔案
@@ -59,6 +59,7 @@ class gammerSpider(scrapy.Spider):
             url = response.url
             title = response.selector.xpath('//h1[@class="title"]/text()').get()
             xpath_post = response.selector.xpath('//div[@class="c-section__main c-post "]')
+
             for selctorItem in xpath_post:
                 floor = selctorItem.xpath('.//div[@class="c-post__header__author"]/a[1]/text()').get()
                 authorName = selctorItem.xpath('.//div[@class="c-post__header__author"]/a[2]/text()').get()
@@ -83,7 +84,7 @@ class gammerSpider(scrapy.Spider):
 
         # 下一頁
         #
-        next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
-        url = response.urljoin(next_page_url)
-        if url:
-            yield scrapy.Request(url, callback=self.parseContent)
+        # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
+        # url = response.urljoin(next_page_url)
+        # if url:
+        #     yield scrapy.Request(url, callback=self.parseContent)
