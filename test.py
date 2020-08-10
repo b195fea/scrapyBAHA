@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 try:
-    executable_path = 'D:\\9.workspace\\02.PYTHON\\chromedriver.exe'
+    # executable_path = 'D:\\9.workspace\\02.PYTHON\\chromedriver.exe'
+    executable_path = 'D:\\driver\\chromedriver.exe'
 
     # 啟動無頭模式
     chrome_options = Options()
@@ -10,9 +11,8 @@ try:
     chrome_options.add_argument('--disable-gpu')
     # Chrome 驅動程式
     # 啟動
-    driver = webdriver.Chrome(executable_path=executable_path,chrome_options=chrome_options)
-    # driver = webdriver.Chrome(executable_path=executable_path)
-
+    # driver = webdriver.Chrome(executable_path=executable_path,chrome_options=chrome_options)
+    driver = webdriver.Chrome(executable_path=executable_path)
     # 設置等待時間
     driver.implicitly_wait(30)
 
