@@ -6,6 +6,7 @@ from idv.zjh.test.myFirstScrapyProject.myFirstScrapyProject.items import Myfirst
 from pypinyin import pinyin, lazy_pinyin, Style
 from scrapy.http import Request, FormRequest
 
+
 class gammerSpider(scrapy.Spider):
     name = "bh3"
     allowes_domains = ["forum.gamer.com.tw"]
