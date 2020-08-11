@@ -114,7 +114,6 @@ class gammerSpider(scrapy.Spider):
                     floor = 1
                     item['C00_title'] = title
                 else:
-                    print(floor)
                     floor = int(floor[:-2])
 
                 item['C00_titleUUID'] = titleUUID
@@ -144,7 +143,6 @@ class gammerSpider(scrapy.Spider):
                     if floor == "樓主":
                         floor = 1
                     else:
-                        print(floor)
                         floor = int(floor[:-2])
                     replyFloor = 0
                     for replyItem in replyDiv:
