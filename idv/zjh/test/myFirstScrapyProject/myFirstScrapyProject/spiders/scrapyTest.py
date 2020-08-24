@@ -14,7 +14,7 @@ class gammerSpider(scrapy.Spider):
     name = "bh3"
     allowes_domains = ["forum.gamer.com.tw"]
     # 崩壞三 討論列表
-    start_urls = ('https://forum.gamer.com.tw/B.php?bsn=31066',)
+    start_urls = ('https://forum.gamer.com.tw/B.php?page=1&bsn=31066','https://forum.gamer.com.tw/B.php?page=2&bsn=31066')
 
     def __init__(self):
         executable_path = 'D:\\driver\\chromedriver.exe'
@@ -33,29 +33,29 @@ class gammerSpider(scrapy.Spider):
     def parse(self, response):
         # urls = response.css('a[class=b-list__main__title]').extract()
         # 單頁面測試
-        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
-        url = response.urljoin(next_page_url)
-        if url:
-            yield scrapy.Request(url, callback=self.parseContent)
-            # yield scrapy.Request(url, callback=self.parseContent)
+        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
+        # url = response.urljoin(next_page_url)
+        # if url:
+        #     yield scrapy.Request(url, callback=self.parseContent)
+        #     # yield scrapy.Request(url, callback=self.parseContent)
 
         # 全部爬蟲
         # 進入文章內容
-        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
-        # for next in next_page_url:
-        #     url = response.urljoin(next)
-        #     # print(url)
-        #     if url:
-        #         yield scrapy.Request(url, callback=self.parseContent)
-        #
-        # next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
-        # for next in next_page_url:
-        #     url = response.urljoin(next)
-        #     # print(url)
-        #     if url:
-        #         yield scrapy.Request(url, callback=self.parseContent)
-        #
-        # # 文章列表 下一頁
+        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
+        for next in next_page_url:
+            url = response.urljoin(next)
+            # print(url)
+            if url:
+                yield scrapy.Request(url, callback=self.parseContent)
+
+        next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
+        for next in next_page_url:
+            url = response.urljoin(next)
+            # print(url)
+            if url:
+                yield scrapy.Request(url, callback=self.parseContent)
+
+        # 文章列表 下一頁
         # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
         # url = response.urljoin(next_page_url)
         # if url:
