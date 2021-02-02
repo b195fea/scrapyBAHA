@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-
+from pymongo import MongoClient
 
 class NewsPipeline:
     def open_spider(self, spider):

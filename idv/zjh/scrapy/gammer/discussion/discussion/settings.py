@@ -87,4 +87,4 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 MONGODB_URI = 'mongodb://localhost:27017'
-MONGODB_DB_NAME = 'bh3_scrapy'
+MONGODB_DB_NAME = 'games_discussion'

@@ -6,15 +6,16 @@ from scrapy import Selector
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from idv.zjh.test.myFirstScrapyProject.myFirstScrapyProject.items import MyfirstscrapyprojectItem
+from idv.zjh.scrapy.gammer.news.news.items import NewsItem
 
 titleDict = {}
 
 class gammerSpider(scrapy.Spider):
-    name = "bh3"
+    name = "news"
+
     allowes_domains = ["forum.gamer.com.tw"]
     # 崩壞三 討論列表
-    start_urls = ('https://forum.gamer.com.tw/B.php?page=1&bsn=31066','https://forum.gamer.com.tw/B.php?page=2&bsn=31066')
+    start_urls = ('https://gnn.gamer.com.tw/detail.php?sn=203221')
 
     def __init__(self):
         executable_path = 'D:\\driver\\chromedriver.exe'
@@ -31,29 +32,30 @@ class gammerSpider(scrapy.Spider):
 
     # 進入留言網址
     def parse(self, response):
-        # urls = response.css('a[class=b-list__main__title]').extract()
+        urls = response.css('a[class=b-list__main__title]').extract()
         # 單頁面測試
-        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
-        # url = response.urljoin(next_page_url)
-        # if url:
-        #     yield scrapy.Request(url, callback=self.parseContent)
-        #     # yield scrapy.Request(url, callback=self.parseContent)
+        print("大家好")
+        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
+        url = response.urljoin(next_page_url)
+        if url:
+            yield scrapy.Request(url, callback=self.parseContent)
+            # yield scrapy.Request(url, callback=self.parseContent)
 
         # 全部爬蟲
         # 進入文章內容
-        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
-
-        next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
+        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
+        #
+        # next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
 
         # 文章列表 下一頁
         # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
@@ -109,7 +111,7 @@ class gammerSpider(scrapy.Spider):
                 authorId = floorItem.xpath('.//div[@class="c-post__header__author"]/a[3]/text()').get()
                 editTime = floorItem.xpath('.//div[@class="c-post__header__info"]/*/text()').get()[0:19]
                 content = floorItem.xpath('.//div[@class="c-article__content"]').xpath('string(.)').extract()[0]
-                item = MyfirstscrapyprojectItem()
+                item = NewsItem()
                 if floor == "樓主":
                     floor = 1
                     item['C00_title'] = title
@@ -151,7 +153,7 @@ class gammerSpider(scrapy.Spider):
                         authorName = replyItem.xpath('.//a[@class="reply-content__user"]/text()').get()
                         content = replyItem.xpath('.//article[@class="reply-content__article c-article "]').xpath('string(.)').extract()[0]
                         editTime = replyItem.xpath('.//div[@class="edittime"]/text()').get()[0:19]
-                        item = MyfirstscrapyprojectItem()
+                        item = NewsItem()
                         item['C00_titleUUID'] = titleUUID
                         item['C01_authorId'] = authorId
                         item['C02_authorName'] = authorName

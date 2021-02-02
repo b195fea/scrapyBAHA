@@ -27,7 +27,7 @@ class MongoDBPipeline:
     def insert_bh3(self, item):
         try:
             item = dict(item)
-            self.db.bh3_test.insert_one(item)
+            self.db.bh3_content.insert_one(item)
         except Exception as e:
             print(e)
 

@@ -6,7 +6,7 @@ from scrapy import Selector
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from idv.zjh.test.myFirstScrapyProject.myFirstScrapyProject.items import MyfirstscrapyprojectItem
+from idv.zjh.scrapy.gammer.discussion.discussion.items import DiscussionItem
 
 titleDict = {}
 
@@ -33,27 +33,27 @@ class bh3Spider(scrapy.Spider):
     def parse(self, response):
         # urls = response.css('a[class=b-list__main__title]').extract()
         # 單頁面測試
-        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
-        # url = response.urljoin(next_page_url)
-        # if url:
-        #     yield scrapy.Request(url, callback=self.parseContent)
-        #     # yield scrapy.Request(url, callback=self.parseContent)
+        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract_first()
+        url = response.urljoin(next_page_url)
+        if url:
+            yield scrapy.Request(url, callback=self.parseContent)
+            # yield scrapy.Request(url, callback=self.parseContent)
 
         # 全部爬蟲
         # 進入文章內容
-        next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
-
-        next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
-        for next in next_page_url:
-            url = response.urljoin(next)
-            # print(url)
-            if url:
-                yield scrapy.Request(url, callback=self.parseContent)
+        # next_page_url = response.xpath('//a[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
+        #
+        # next_page_url = response.xpath('//p[@class="b-list__main__title"]/@href').extract()
+        # for next in next_page_url:
+        #     url = response.urljoin(next)
+        #     # print(url)
+        #     if url:
+        #         yield scrapy.Request(url, callback=self.parseContent)
 
         # 文章列表 下一頁
         # next_page_url = response.xpath('//a[@class="next"]/@href').extract_first()
@@ -109,7 +109,7 @@ class bh3Spider(scrapy.Spider):
                 authorId = floorItem.xpath('.//div[@class="c-post__header__author"]/a[3]/text()').get()
                 editTime = floorItem.xpath('.//div[@class="c-post__header__info"]/*/text()').get()[0:19]
                 content = floorItem.xpath('.//div[@class="c-article__content"]').xpath('string(.)').extract()[0]
-                item = MyfirstscrapyprojectItem()
+                item = DiscussionItem()
                 if floor == "樓主":
                     floor = 1
                     item['C00_title'] = title
@@ -151,7 +151,7 @@ class bh3Spider(scrapy.Spider):
                         authorName = replyItem.xpath('.//a[@class="reply-content__user"]/text()').get()
                         content = replyItem.xpath('.//article[@class="reply-content__article c-article "]').xpath('string(.)').extract()[0]
                         editTime = replyItem.xpath('.//div[@class="edittime"]/text()').get()[0:19]
-                        item = MyfirstscrapyprojectItem()
+                        item = DiscussionItem()
                         item['C00_titleUUID'] = titleUUID
                         item['C01_authorId'] = authorId
                         item['C02_authorName'] = authorName
