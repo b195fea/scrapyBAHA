@@ -10,19 +10,19 @@ from pymongo import MongoClient
 
 class NewsPipeline:
     def open_spider(self, spider):
-        db_uri = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
-        db_name = spider.settings.get('MONGODB_DB_NAME', 'scrapy')
-        self.db_client = MongoClient('mongodb://localhost:27017')
+        db_uri = spider.settings.get('MONGODB_URI')
+        db_name = spider.settings.get('MONGODB_DB_NAME')
+        self.db_client = MongoClient(db_uri)
         self.db = self.db_client[db_name]
 
     def process_item(self, item, spider):
-        self.insert_bh3(item)
+        self.insert(item)
         return item
 
-    def insert_bh3(self, item):
+    def insert(self, item):
         try:
             item = dict(item)
-            self.db.bh3_test.insert_one(item)
+            self.db.scrapy_news.insert_one(item)
         except Exception as e:
             print(e)
 
